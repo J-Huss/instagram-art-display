@@ -1,0 +1,10 @@
+instagrapi==1.19.7
+numpy==1.24.3
+opencv-python==4.7.0.72
+Pillow==9.5.0
+SQLAlchemy==2.0.19
+SQLAlchemy-Utils==0.41.1
+sv-ttk==2.5.1
+tensorflow==2.13.0
+tkVideo==0.1
+urllib3==1.26.16
