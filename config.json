@@ -1,0 +1,10 @@
+{
+    "db_path":"",
+    "cl_session_path":"",
+    "media_path":"",
+    "ml_model_path":"/binary_classification.keras",
+    "active_coll_acc_str":"",
+    "active_coll_acc_pk": "",
+    "cl_username":"",
+    "cl_password":""
+}
