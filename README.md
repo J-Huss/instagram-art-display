@@ -21,7 +21,7 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 - run display-app.py
 
 # Credits:
-- To the creators of instagrapi. This project would not be possible without them.
+- To the creators of [instagrapi](https://github.com/subzeroid/instagrapi). This project would not be possible without them.
 - And of course to the artists. Please donate to them or buy their art if possible for you. 
 
 # Approach:
