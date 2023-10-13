@@ -4,12 +4,12 @@
 # Instagram Art Display
 
 # Project Pitch:
-There is so many beautiful art on Instagram. I always found it unfortunate that you're mostly looking at it through the phone for a couple of seconds not really being to appreciate it for a longer time on a bigger scale. 
+There is so much beautiful art on Instagram. I always found it unfortunate that you're mostly looking at it through the phone for a couple of seconds not really being to appreciate it for a longer time on a bigger scale. 
 That's why I looked for ways to bringing it to a bigger screen and created Instagram Art Display:
 - A small app that serves you the media from users you're following, displaying it static or through a slide show
 - It trains a simple ML model with keras binary classification according to your personal preferences and can select media based on it
 
-![example screenshot](./example-screenshot.png)
+![example_screenshot](https://github.com/J-Huss/instagram-art-display/blob/main/example_screenshot.png)
 (credits: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
 
 # How to use:
