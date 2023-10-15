@@ -16,11 +16,18 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 Confirmed to work with Python 3.11.x.
 
 - Install dependencies with `pip install -r requirements.txt`
-- Insert into config.json file:
-- Your file paths
-- Login data for instagram account used for retrieving media (should be a disposable account)
-- The user name from the instagram account that follows the accounts you want to get media from (needs to be public)
+- Adjust config.json as necessary (see below, "Config options")
 - Run display-app.py
+
+### Config options
+| Setting             | Description                                                                          | Suggested default           |
+|---------------------|--------------------------------------------------------------------------------------|-----------------------------|
+| db_path             | Sqlite database file                                                                 | prod.db                     |
+| cl_session_path     | Instagrapi session file                                                              | session.json                |
+| ml_model_path       | Keras model file                                                                     | binary_classification.keras |
+| active_coll_acc_str | IG account from whose followed accounts media should be sourced (needs to be public) |                             |
+| cl_username         | IG client account for retrieving media (should be disposable)                        |                             |
+| cl_password         | IG client account password                                                           |                             |
 
 ## Credits
 - To the creators of [instagrapi](https://github.com/subzeroid/instagrapi). This project would not be possible without them.
