@@ -13,7 +13,8 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 (credit: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
 
 ## How to use
-- Use Python 3.11.X
+Confirmed to work with Python 3.11.x.
+
 - Insert into config.json file:
 - Your file paths
 - Login data for instagram account used for retrieving media (should be a disposable account)
