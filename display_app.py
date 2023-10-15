@@ -7,7 +7,7 @@ import sv_ttk
 import cv2
 import os
 from datetime import datetime
-import ctypes as ct
+import ctypes
 import platform
 import time
 import threading
@@ -17,23 +17,84 @@ from tensorflow.keras.models import load_model
 import instagrapi
 
 import db
-import media_handler as mh
-import ml_training as mlt
+import media_handler
+import ml_training
 
 ### /// currently outcommented some threads within start function
 
 class DisplayApp:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.title("Art Display")
+        sv_ttk.use_dark_theme()
+        self.fullscreen = tk.Toplevel(self.window)
+        self.fullscreen.withdraw()
+        self.fullscreen.bind("<Key>", self.end_fullscreen)
+        self.fullscreen.bind("<Button-1>", self.end_fullscreen)
+        
+        self.window.after(0, lambda: self.window.wm_state('zoomed'))
+        self.window.after(0,self.window.lift)
+        self.work_img_path = "work_file.jpg"
+        self.work_video_path = "work_file.mp4"
+
+        # if condition code: work around to make title bar dark as well; only works on Windows(10?)
+        # this makes booting up a bit 'jumpy' sometime, but tradeoff for having this jumpy part only in the beginning vs white title bar all the time
+        # https://gist.github.com/Olikonsti/879edbf69b801d8519bf25e804cec0aa?permalink_comment_id=4416827#gistcomment-4416827
+        if platform.system() == "Windows" and int(platform.release()) == 10:
+            self.window.update()
+            self.window.iconify()
+            DWWMA_USE_IMMERSIVE_DARK_MODE = 20
+            set_window_attribute = ctypes.windll.dwmapi.DwmSetWindowAttribute
+            get_parent = ctypes.windll.user32.GetParent
+            hwnd = get_parent(self.window.winfo_id())
+            rendering_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
+            value = 2
+            value = ctypes.c_int(value)
+            set_window_attribute(hwnd, rendering_policy, ctypes.byref(value), ctypes.sizeof(value))
+            self.window.update_idletasks()
+            self.window.deiconify()
+
+        ### TODO: integrate into settings function
+        # slideshow & scraping settings
+        self.timer_hours = 0
+        self.timer_minutes = 0
+        self.timer_seconds = 30
+        self.intervall_update_followee_list = 604800  # one week in seconds
+        self.intervall_reg_scraping = 10800 #3 hours in seconds
+
+        self.state_slideshow_running = bool
+
+        self.button_fullscreen = ttk.Button(self.window,command=self.button_toggle_fullscreen_function,text="fullscreen")
+        self.button_fullscreen.place(relx=0.95, rely=0.95, anchor='center')
+
+        self.button_dont_show_again = ttk.Button(self.window,command=self.button_dont_show_again_function,text="don't show this again",width=20)
+        self.button_dont_show_again.place(relx=0.07, rely=0.91, anchor='center')
+
+        self.button_is_favorite = ttk.Button(self.window,command=self.button_is_favorite_function,text="add to favorites",width=20) # setting 'add to favorites' as default emtpy state since more media will be non-favorite than favorite
+        self.button_is_favorite.place(relx=0.93, rely=0.05, anchor='center')
+
+        self.button_show_next_media = ttk.Button(self.window,command=self.next_media,text="show next media",width=20)
+        self.button_show_next_media.place(relx=0.07, rely=0.95, anchor='center')
+
+        self.button_slideshow = ttk.Button(self.window,command=self.button_slideshow_start_function,text="start slideshow",width=20)
+        self.button_slideshow.place(relx=0.07,rely=0.05,anchor='center')
+
+        self.window.protocol("WM_DELETE_WINDOW",self.closing_function) 
+
+
+        self.window.after(200, lambda: self.get_random_media())
+
     def setup(self):
         print(str(datetime.now())+": function setup started")
         
-        ### add: welcome prompt
-        ### add: showing small text label with progress steps; constantly updating text and then destroying it
+        ### TODO: welcome prompt
+        ### TODO: showing small text label with progress steps; constantly updating text and then destroying it
         
         if os.path.isfile(db.DB_PATH) is True:
             print(str(datetime.now())+": database exists")
         ### else: 
-        ### add: asks for file path; save this to variable and to config json
-        ### add: create new db with #db.init_all_tables()
+        ### TODO: asks for file path; save this to variable and to config json
+        ### TODO: create new db with #db.init_all_tables()
         # currently no else statement needed, since db.setup_connection creates new db, if there's none existing for coll_acc_pk
         
         
@@ -41,13 +102,13 @@ class DisplayApp:
                 print(str(datetime.now())+": function setup finished")
                 return
         # else:
-            ### add: setup functions
+            ### TODO: setup functions
             ### get collector account pk
             ### get followee list
             ### scrape initial media amount
             ### set first setup done to 1
 
-        ### integrate this into setting option
+        ### TODO: integrate this into setting option
         self.ml_pred_enabled = True
 
         if self.ml_pred_enabled is True:
@@ -62,7 +123,7 @@ class DisplayApp:
 
         while True:
             try:
-                self.curr_media_obj=mh.media(*mh.load_db_media_values(db.get_random_media()))
+                self.curr_media_obj=media_handler.media(*media_handler.load_db_media_values(db.get_random_media()))
                 self.curr_media_obj.load_file()
             except instagrapi.exceptions.MediaNotFound:
                 print(str(datetime.now())+": media post doesn't exist on Instagram anymore; deleting entry from db and getting new one")
@@ -107,67 +168,6 @@ class DisplayApp:
         self.state_slideshow_running = False # workaround because setting deamon thread for slideshow is not working when using tkinter
         db.conn.close()
         self.window.destroy()
-
-    def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Art Display")
-        sv_ttk.use_dark_theme()
-        self.fullscreen = tk.Toplevel(self.window)
-        self.fullscreen.withdraw()
-        self.fullscreen.bind("<Key>", self.end_fullscreen)
-        self.fullscreen.bind("<Button-1>", self.end_fullscreen)
-        
-        self.window.after(0, lambda: self.window.wm_state('zoomed'))
-        self.window.after(0,self.window.lift)
-        self.work_img_path = "work_file.jpg"
-        self.work_video_path = "work_file.mp4"
-
-        # if condition code: work around to make title bar dark as well; only works on Windows(10?)
-        # this makes booting up a bit 'jumpy' sometime, but tradeoff for having this jumpy part only in the beginning vs white title bar all the time
-        # https://gist.github.com/Olikonsti/879edbf69b801d8519bf25e804cec0aa?permalink_comment_id=4416827#gistcomment-4416827
-        if platform.system() == "Windows" and int(platform.release()) == 10:
-            self.window.update()
-            self.window.iconify()
-            DWWMA_USE_IMMERSIVE_DARK_MODE = 20
-            set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-            get_parent = ct.windll.user32.GetParent
-            hwnd = get_parent(self.window.winfo_id())
-            renduring_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
-            value = 2
-            value = ct.c_int(value)
-            set_window_attribute(hwnd, renduring_policy, ct.byref(value), ct.sizeof(value))
-            self.window.update_idletasks()
-            self.window.deiconify()
-
-        ### integrate into settings function
-        # slideshow & scraping settings
-        self.timer_hours = 0
-        self.timer_minutes = 0
-        self.timer_seconds = 30
-        self.intervall_update_followee_list = 604800  # one week in seconds
-        self.intervall_reg_scraping = 10800 #3 hours in seconds
-
-        self.state_slideshow_running = bool
-
-        self.button_fullscreen = ttk.Button(self.window,command=self.button_toggle_fullscreen_function,text="fullscreen")
-        self.button_fullscreen.place(relx=0.95, rely=0.95, anchor='center')
-
-        self.button_dont_show_again = ttk.Button(self.window,command=self.button_dont_show_again_function,text="don't show this again",width=20)
-        self.button_dont_show_again.place(relx=0.07, rely=0.91, anchor='center')
-
-        self.button_is_favorite = ttk.Button(self.window,command=self.button_is_favorite_function,text="add to favorites",width=20) # setting 'add to favorites' as default emtpy state since more media will be non-favorite than favorite
-        self.button_is_favorite.place(relx=0.93, rely=0.05, anchor='center')
-
-        self.button_show_next_media = ttk.Button(self.window,command=self.next_media,text="show next media",width=20)
-        self.button_show_next_media.place(relx=0.07, rely=0.95, anchor='center')
-
-        self.button_slideshow = ttk.Button(self.window,command=self.button_slideshow_start_function,text="start slideshow",width=20)
-        self.button_slideshow.place(relx=0.07,rely=0.05,anchor='center')
-
-        self.window.protocol("WM_DELETE_WINDOW",self.closing_function) 
-
-
-        self.window.after(200, lambda: self.get_random_media())
 
     def button_toggle_fullscreen_function(self):
         print(str(datetime.now())+": button fullscreen pressed")
@@ -227,7 +227,7 @@ class DisplayApp:
 
     def init_media_labels(self):
         # needs completely different if/else setups for different media_types, since different type of labels need to be created
-        ### add: currently works for most screens with just hardcoding the resizing; later add: relative amount
+        ### TODO: currently works for most screens with just hardcoding the resizing; later add: relative amount
         if self.curr_media_obj.media_type == 1:
             print(str(datetime.now())+": creating labels for image")
             self.work_img = Image.open(self.work_img_path)
@@ -275,7 +275,7 @@ class DisplayApp:
         print(str(datetime.now())+": button next media pressed")
         # if deleting of dont_show_again enabled: allow for deletion of old media from storage before getting the new one:
         
-        if self.curr_media_obj.dont_show_again == 1 and mh.saving_dont_show_again_enabled is False:
+        if self.curr_media_obj.dont_show_again == 1 and media_handler.saving_dont_show_again_enabled is False:
             print(str(datetime.now())+": trying to delete media from storage")
             try:
                 os.remove(self.curr_media_obj.file_path)
@@ -290,7 +290,7 @@ class DisplayApp:
         self.get_random_media()
 
     def reg_scraping(self):
-        ### add: hard-coded scraping amount for now; later: install loop with media counter limit
+        ### TODO: hard-coded scraping amount for now; later: install loop with media counter limit
         ### OR integrate time stamps of posts and scrape till latest post saved of users
         while True:
             print(str(datetime.now())+": function reg_scraping started")
@@ -298,7 +298,7 @@ class DisplayApp:
             if time_passed > self.intervall_reg_scraping:
                 print(str(datetime.now())+": time_passed bigger than defined intervall; starting scraping")
                 
-                #mh.get_X_from_all_users(3)
+                #media_handler.get_X_from_all_users(3)
                 
                 db.set_last_time_media_scraped(db.ACTIVE_COLL_ACC_PK) 
                 print(str(datetime.now())+": finished scraping and finished function reg_scraping")
@@ -314,7 +314,7 @@ class DisplayApp:
         time_passed =  int(time.time()) - db.get_last_time_followee_list_updated(db.ACTIVE_COLL_ACC_PK)
         if time_passed > self.intervall_update_followee_list:
             print(str(datetime.now())+": time_passed bigger than defined intervall; starting updating now")
-            mh.get_followee_list()
+            media_handler.get_followee_list()
             print(str(datetime.now())+": finished function update_followee_list")
         else:
             print(str(datetime.now())+": time_passed smaller than defined intervall; finished function update_followee_list")
@@ -329,13 +329,12 @@ class DisplayApp:
         #self.thread_reg_scraping = threading.Thread(target=self.reg_scraping)
         #self.window.after(10000, lambda: self.thread_reg_scraping.start())
 
-        self.thread_ml_training = threading.Thread(target=mlt.full_training)
+        self.thread_ml_training = threading.Thread(target=ml_training.full_training)
         self.window.after(5000, lambda: self.thread_ml_training.start())
 
         self.window.mainloop()
-      
 
 
-DisplayApp=DisplayApp()
-DisplayApp.start()
-
+if __name__ == "__main__":
+    DisplayApp=DisplayApp()
+    DisplayApp.start()

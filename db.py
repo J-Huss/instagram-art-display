@@ -11,7 +11,7 @@ ACTIVE_COLL_ACC_STR = config['active_coll_acc_str']
 ACTIVE_COLL_ACC_PK = "" # will be filled through media_handler file
 
 # selection settings
-### todo: include this in settings table per user
+### TODO: include this in settings table per user
 media_type_selection = [1]
 show_only_favorites_enabled = False
 show_only_shown_before_enabled = False
@@ -27,7 +27,7 @@ def setup_connection():
 
 setup_connection()
 
-### squlite does not really handle more granular datatypes, add through sqlalchemy
+### sqlite does not really handle more granular datatypes, add through sqlalchemy
 def init_settings_table():
     c.execute("""
         CREATE TABLE IF NOT EXISTS settings
@@ -201,7 +201,7 @@ def get_random_user():
     conn.commit()
     return c.fetchone()[0]
 
-### add: option selection through settings
+### TODO: option selection through settings
 ### rewrite with: try 2nd query for x runs OR x seconds; 
 ### if it doesnt bring result, try query one
 ### OR go through list top 50 least viewed percentage users; go through list DESC, 
