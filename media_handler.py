@@ -20,9 +20,10 @@ saving_dont_show_again_enabled = True
 saving_videos_enabled = True # not integrated anywhere yet
 
 cl=instagrapi.Client()
-### add: exception handling when no sessions exists yet
-cl.set_settings(cl.load_settings(CL_SESSION_PATH))
-#cl.login(CL_USERNAME,CL_PASSWORD)
+if os.path.isfile(CL_SESSION_PATH):
+    cl.set_settings(cl.load_settings(CL_SESSION_PATH))
+else:
+    cl.login(CL_USERNAME,CL_PASSWORD)
 #cl.delay_range = [1,5] # can set delay range our timeout to client https://github.com/adw0rd/instagrapi/issues/1311
 cl.dump_settings(CL_SESSION_PATH)
 
