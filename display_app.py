@@ -23,6 +23,67 @@ import ml_training as mlt
 ### /// currently outcommented some threads within start function
 
 class DisplayApp:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.title("Art Display")
+        sv_ttk.use_dark_theme()
+        self.fullscreen = tk.Toplevel(self.window)
+        self.fullscreen.withdraw()
+        self.fullscreen.bind("<Key>", self.end_fullscreen)
+        self.fullscreen.bind("<Button-1>", self.end_fullscreen)
+        
+        self.window.after(0, lambda: self.window.wm_state('zoomed'))
+        self.window.after(0,self.window.lift)
+        self.work_img_path = "work_file.jpg"
+        self.work_video_path = "work_file.mp4"
+
+        # if condition code: work around to make title bar dark as well; only works on Windows(10?)
+        # this makes booting up a bit 'jumpy' sometime, but tradeoff for having this jumpy part only in the beginning vs white title bar all the time
+        # https://gist.github.com/Olikonsti/879edbf69b801d8519bf25e804cec0aa?permalink_comment_id=4416827#gistcomment-4416827
+        if platform.system() == "Windows" and int(platform.release()) == 10:
+            self.window.update()
+            self.window.iconify()
+            DWWMA_USE_IMMERSIVE_DARK_MODE = 20
+            set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+            get_parent = ct.windll.user32.GetParent
+            hwnd = get_parent(self.window.winfo_id())
+            renduring_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
+            value = 2
+            value = ct.c_int(value)
+            set_window_attribute(hwnd, renduring_policy, ct.byref(value), ct.sizeof(value))
+            self.window.update_idletasks()
+            self.window.deiconify()
+
+        ### integrate into settings function
+        # slideshow & scraping settings
+        self.timer_hours = 0
+        self.timer_minutes = 0
+        self.timer_seconds = 30
+        self.intervall_update_followee_list = 604800  # one week in seconds
+        self.intervall_reg_scraping = 10800 #3 hours in seconds
+
+        self.state_slideshow_running = bool
+
+        self.button_fullscreen = ttk.Button(self.window,command=self.button_toggle_fullscreen_function,text="fullscreen")
+        self.button_fullscreen.place(relx=0.95, rely=0.95, anchor='center')
+
+        self.button_dont_show_again = ttk.Button(self.window,command=self.button_dont_show_again_function,text="don't show this again",width=20)
+        self.button_dont_show_again.place(relx=0.07, rely=0.91, anchor='center')
+
+        self.button_is_favorite = ttk.Button(self.window,command=self.button_is_favorite_function,text="add to favorites",width=20) # setting 'add to favorites' as default emtpy state since more media will be non-favorite than favorite
+        self.button_is_favorite.place(relx=0.93, rely=0.05, anchor='center')
+
+        self.button_show_next_media = ttk.Button(self.window,command=self.next_media,text="show next media",width=20)
+        self.button_show_next_media.place(relx=0.07, rely=0.95, anchor='center')
+
+        self.button_slideshow = ttk.Button(self.window,command=self.button_slideshow_start_function,text="start slideshow",width=20)
+        self.button_slideshow.place(relx=0.07,rely=0.05,anchor='center')
+
+        self.window.protocol("WM_DELETE_WINDOW",self.closing_function) 
+
+
+        self.window.after(200, lambda: self.get_random_media())
+
     def setup(self):
         print(str(datetime.now())+": function setup started")
         
@@ -107,67 +168,6 @@ class DisplayApp:
         self.state_slideshow_running = False # workaround because setting deamon thread for slideshow is not working when using tkinter
         db.conn.close()
         self.window.destroy()
-
-    def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Art Display")
-        sv_ttk.use_dark_theme()
-        self.fullscreen = tk.Toplevel(self.window)
-        self.fullscreen.withdraw()
-        self.fullscreen.bind("<Key>", self.end_fullscreen)
-        self.fullscreen.bind("<Button-1>", self.end_fullscreen)
-        
-        self.window.after(0, lambda: self.window.wm_state('zoomed'))
-        self.window.after(0,self.window.lift)
-        self.work_img_path = "work_file.jpg"
-        self.work_video_path = "work_file.mp4"
-
-        # if condition code: work around to make title bar dark as well; only works on Windows(10?)
-        # this makes booting up a bit 'jumpy' sometime, but tradeoff for having this jumpy part only in the beginning vs white title bar all the time
-        # https://gist.github.com/Olikonsti/879edbf69b801d8519bf25e804cec0aa?permalink_comment_id=4416827#gistcomment-4416827
-        if platform.system() == "Windows" and int(platform.release()) == 10:
-            self.window.update()
-            self.window.iconify()
-            DWWMA_USE_IMMERSIVE_DARK_MODE = 20
-            set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-            get_parent = ct.windll.user32.GetParent
-            hwnd = get_parent(self.window.winfo_id())
-            renduring_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
-            value = 2
-            value = ct.c_int(value)
-            set_window_attribute(hwnd, renduring_policy, ct.byref(value), ct.sizeof(value))
-            self.window.update_idletasks()
-            self.window.deiconify()
-
-        ### integrate into settings function
-        # slideshow & scraping settings
-        self.timer_hours = 0
-        self.timer_minutes = 0
-        self.timer_seconds = 30
-        self.intervall_update_followee_list = 604800  # one week in seconds
-        self.intervall_reg_scraping = 10800 #3 hours in seconds
-
-        self.state_slideshow_running = bool
-
-        self.button_fullscreen = ttk.Button(self.window,command=self.button_toggle_fullscreen_function,text="fullscreen")
-        self.button_fullscreen.place(relx=0.95, rely=0.95, anchor='center')
-
-        self.button_dont_show_again = ttk.Button(self.window,command=self.button_dont_show_again_function,text="don't show this again",width=20)
-        self.button_dont_show_again.place(relx=0.07, rely=0.91, anchor='center')
-
-        self.button_is_favorite = ttk.Button(self.window,command=self.button_is_favorite_function,text="add to favorites",width=20) # setting 'add to favorites' as default emtpy state since more media will be non-favorite than favorite
-        self.button_is_favorite.place(relx=0.93, rely=0.05, anchor='center')
-
-        self.button_show_next_media = ttk.Button(self.window,command=self.next_media,text="show next media",width=20)
-        self.button_show_next_media.place(relx=0.07, rely=0.95, anchor='center')
-
-        self.button_slideshow = ttk.Button(self.window,command=self.button_slideshow_start_function,text="start slideshow",width=20)
-        self.button_slideshow.place(relx=0.07,rely=0.05,anchor='center')
-
-        self.window.protocol("WM_DELETE_WINDOW",self.closing_function) 
-
-
-        self.window.after(200, lambda: self.get_random_media())
 
     def button_toggle_fullscreen_function(self):
         print(str(datetime.now())+": button fullscreen pressed")
