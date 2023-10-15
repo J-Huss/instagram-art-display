@@ -1,5 +1,5 @@
-
-# WORK IN PROGRESS
+| :warning:  This is a work in progress   |
+|-----------------------------------------|
 
 # Instagram Art Display
 
