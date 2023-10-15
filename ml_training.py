@@ -1,5 +1,5 @@
 import sqlalchemy as sqa
-import sqlalchemy_utils as sqau
+import sqlalchemy_utils
 import os
 from datetime import datetime
 import time
@@ -29,7 +29,7 @@ def db_setup():
         pass
     else:
         print(str(datetime.now())+": db file does not exist, creating new db")
-        sqau.create_database(CONN_STR)
+        sqlalchemy_utils.create_database(CONN_STR)
     global engine
     engine = sqa.create_engine(CONN_STR) #,echo=True) # only enalbe for debugging
     global conn

@@ -7,7 +7,7 @@ import sv_ttk
 import cv2
 import os
 from datetime import datetime
-import ctypes as ct
+import ctypes
 import platform
 import time
 import threading
@@ -17,8 +17,8 @@ from tensorflow.keras.models import load_model
 import instagrapi
 
 import db
-import media_handler as mh
-import ml_training as mlt
+import media_handler
+import ml_training
 
 ### /// currently outcommented some threads within start function
 
@@ -44,13 +44,13 @@ class DisplayApp:
             self.window.update()
             self.window.iconify()
             DWWMA_USE_IMMERSIVE_DARK_MODE = 20
-            set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-            get_parent = ct.windll.user32.GetParent
+            set_window_attribute = ctypes.windll.dwmapi.DwmSetWindowAttribute
+            get_parent = ctypes.windll.user32.GetParent
             hwnd = get_parent(self.window.winfo_id())
             renduring_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
             value = 2
-            value = ct.c_int(value)
-            set_window_attribute(hwnd, renduring_policy, ct.byref(value), ct.sizeof(value))
+            value = ctypes.c_int(value)
+            set_window_attribute(hwnd, renduring_policy, ctypes.byref(value), ctypes.sizeof(value))
             self.window.update_idletasks()
             self.window.deiconify()
 
@@ -123,7 +123,7 @@ class DisplayApp:
 
         while True:
             try:
-                self.curr_media_obj=mh.media(*mh.load_db_media_values(db.get_random_media()))
+                self.curr_media_obj=media_handler.media(*media_handler.load_db_media_values(db.get_random_media()))
                 self.curr_media_obj.load_file()
             except instagrapi.exceptions.MediaNotFound:
                 print(str(datetime.now())+": media post doesn't exist on Instagram anymore; deleting entry from db and getting new one")
@@ -275,7 +275,7 @@ class DisplayApp:
         print(str(datetime.now())+": button next media pressed")
         # if deleting of dont_show_again enabled: allow for deletion of old media from storage before getting the new one:
         
-        if self.curr_media_obj.dont_show_again == 1 and mh.saving_dont_show_again_enabled is False:
+        if self.curr_media_obj.dont_show_again == 1 and media_handler.saving_dont_show_again_enabled is False:
             print(str(datetime.now())+": trying to delete media from storage")
             try:
                 os.remove(self.curr_media_obj.file_path)
@@ -298,7 +298,7 @@ class DisplayApp:
             if time_passed > self.intervall_reg_scraping:
                 print(str(datetime.now())+": time_passed bigger than defined intervall; starting scraping")
                 
-                #mh.get_X_from_all_users(3)
+                #media_handler.get_X_from_all_users(3)
                 
                 db.set_last_time_media_scraped(db.ACTIVE_COLL_ACC_PK) 
                 print(str(datetime.now())+": finished scraping and finished function reg_scraping")
@@ -314,7 +314,7 @@ class DisplayApp:
         time_passed =  int(time.time()) - db.get_last_time_followee_list_updated(db.ACTIVE_COLL_ACC_PK)
         if time_passed > self.intervall_update_followee_list:
             print(str(datetime.now())+": time_passed bigger than defined intervall; starting updating now")
-            mh.get_followee_list()
+            media_handler.get_followee_list()
             print(str(datetime.now())+": finished function update_followee_list")
         else:
             print(str(datetime.now())+": time_passed smaller than defined intervall; finished function update_followee_list")
@@ -329,7 +329,7 @@ class DisplayApp:
         #self.thread_reg_scraping = threading.Thread(target=self.reg_scraping)
         #self.window.after(10000, lambda: self.thread_reg_scraping.start())
 
-        self.thread_ml_training = threading.Thread(target=mlt.full_training)
+        self.thread_ml_training = threading.Thread(target=ml_training.full_training)
         self.window.after(5000, lambda: self.thread_ml_training.start())
 
         self.window.mainloop()
