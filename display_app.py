@@ -333,9 +333,8 @@ class DisplayApp:
         self.window.after(5000, lambda: self.thread_ml_training.start())
 
         self.window.mainloop()
-      
 
 
-DisplayApp=DisplayApp()
-DisplayApp.start()
-
+if __name__ == "__main__":
+    DisplayApp=DisplayApp()
+    DisplayApp.start()
