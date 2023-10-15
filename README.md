@@ -9,7 +9,7 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 - A small app that serves you the media from users you're following, displaying it static or through a slide show
 - It trains a simple ML model with keras binary classification according to your personal preferences and can select media based on it
 
-![example_screenshot](https://github.com/J-Huss/instagram-art-display/blob/main/example_screenshot.png)
+![example_screenshot](example_screenshot.png)
 (credits: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
 
 ## How to use
