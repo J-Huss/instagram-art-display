@@ -3,7 +3,7 @@
 
 # Instagram Art Display
 
-# Project Pitch:
+## Project Pitch
 There is so much beautiful art on Instagram. I always found it unfortunate that you're mostly looking at it through the phone for a couple of seconds not really being to appreciate it for a longer time on a bigger scale. 
 That's why I looked for ways to bringing it to a bigger screen and created Instagram Art Display:
 - A small app that serves you the media from users you're following, displaying it static or through a slide show
@@ -12,7 +12,7 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 ![example_screenshot](https://github.com/J-Huss/instagram-art-display/blob/main/example_screenshot.png)
 (credits: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
 
-# How to use:
+## How to use
 - Use Python 3.11.X
 - insert into config.json file:
 - your file paths
@@ -20,20 +20,20 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 - the user name from the instagram account that follows the accounts you want to get media from (needs to be public)
 - run display-app.py
 
-# Credits:
+## Credits
 - To the creators of [instagrapi](https://github.com/subzeroid/instagrapi). This project would not be possible without them.
 - And of course to the artists. Please donate to them or buy their art if possible for you. 
 
-# Approach:
+## Approach
 I first wrote this app monolithic with Python and tkinter, because Python is the language I know best and it allowed me to faster get an MVP of the display function working in order to focus on the most critical quality aspect of the app: validating if I can get a useful ML model working. 
 Next up is shifting this to a more appealing UI and getting the architecture more modular. See the following tasks for details:
 
-# Priority Fixes: 
+### Priority Fixes
 - improve loading time of keras / import only necessary 
 - improve loading time of next ML selected media with caching
 - rewrite all remaining raw sqlite query functions to sqlalchemy query functions
 
-# Epics Opportunities:
+### Epics Opportunities
 - experiment ML training with additional data label "like the style, but not this particular media"
 - shift to JS frontend and serve data through fastAPI OR Django
 - enable UI adjustable settings
