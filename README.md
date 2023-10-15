@@ -14,11 +14,11 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 
 ## How to use
 - Use Python 3.11.X
-- insert into config.json file:
-- your file paths
-- login data for instagram account used for retrieving media (should be a disposable account)
-- the user name from the instagram account that follows the accounts you want to get media from (needs to be public)
-- run display-app.py
+- Insert into config.json file:
+- Your file paths
+- Login data for instagram account used for retrieving media (should be a disposable account)
+- The user name from the instagram account that follows the accounts you want to get media from (needs to be public)
+- Run display-app.py
 
 ## Credits
 - To the creators of [instagrapi](https://github.com/subzeroid/instagrapi). This project would not be possible without them.
@@ -29,16 +29,16 @@ I first wrote this app monolithic with Python and tkinter, because Python is the
 Next up is shifting this to a more appealing UI and getting the architecture more modular. See the following tasks for details:
 
 ### Priority Fixes
-- improve loading time of keras / import only necessary 
-- improve loading time of next ML selected media with caching
-- rewrite all remaining raw sqlite query functions to sqlalchemy query functions
+- Improve loading time of keras / import only necessary 
+- Improve loading time of next ML selected media with caching
+- Rewrite all remaining raw sqlite query functions to sqlalchemy query functions
 
 ### Epics Opportunities
-- experiment ML training with additional data label "like the style, but not this particular media"
-- shift to JS frontend and serve data through fastAPI OR Django
-- enable UI adjustable settings
-- experiment with recommender ML model
-- experiment with training ML model for generalizability to solve cold start problem
-- enable followee list filtering through e.g. profession or keywords
-- enalbe remote and scheduling control, e.g. with IFTTT integration
-- enable donations for the artists through their provided options in bio link
+- Experiment ML training with additional data label "like the style, but not this particular media"
+- Shift to JS frontend and serve data through fastAPI OR Django
+- Enable UI adjustable settings
+- Experiment with recommender ML model
+- Experiment with training ML model for generalizability to solve cold start problem
+- Enable followee list filtering through e.g. profession or keywords
+- Enalbe remote and scheduling control, e.g. with IFTTT integration
+- Enable donations for the artists through their provided options in bio link
