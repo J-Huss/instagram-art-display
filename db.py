@@ -27,7 +27,7 @@ def setup_connection():
 
 setup_connection()
 
-### squlite does not really handle more granular datatypes, add through sqlalchemy
+### sqlite does not really handle more granular datatypes, add through sqlalchemy
 def init_settings_table():
     c.execute("""
         CREATE TABLE IF NOT EXISTS settings

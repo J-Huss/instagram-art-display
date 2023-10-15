@@ -47,10 +47,10 @@ class DisplayApp:
             set_window_attribute = ctypes.windll.dwmapi.DwmSetWindowAttribute
             get_parent = ctypes.windll.user32.GetParent
             hwnd = get_parent(self.window.winfo_id())
-            renduring_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
+            rendering_policy = DWWMA_USE_IMMERSIVE_DARK_MODE
             value = 2
             value = ctypes.c_int(value)
-            set_window_attribute(hwnd, renduring_policy, ctypes.byref(value), ctypes.sizeof(value))
+            set_window_attribute(hwnd, rendering_policy, ctypes.byref(value), ctypes.sizeof(value))
             self.window.update_idletasks()
             self.window.deiconify()
 
