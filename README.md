@@ -6,11 +6,11 @@
 ## Project Pitch
 There is so much beautiful art on Instagram. I always found it unfortunate that you're mostly looking at it through the phone for a couple of seconds not really being to appreciate it for a longer time on a bigger scale. 
 That's why I looked for ways to bringing it to a bigger screen and created Instagram Art Display:
-- A small app that serves you the media from users you're following, displaying it static or through a slide show
+- A small app that serves you the media from users you're following, displaying it statically or through a slide show
 - It trains a simple ML model with keras binary classification according to your personal preferences and can select media based on it
 
 ![example_screenshot](example_screenshot.png)
-(credits: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
+(credit: [innerfields](https://www.instagram.com/p/CirgC3hoLpL))
 
 ## How to use
 - Use Python 3.11.X
@@ -25,7 +25,7 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 - And of course to the artists. Please donate to them or buy their art if possible for you. 
 
 ## Approach
-I first wrote this app monolithic with Python and tkinter, because Python is the language I know best and it allowed me to faster get an MVP of the display function working in order to focus on the most critical quality aspect of the app: validating if I can get a useful ML model working. 
+I first wrote this as a monolithic app with Python and tkinter, because Python is the language I know best and it allowed me to get an MVP of the display function working faster in order to focus on the most critical quality aspect of the app: validating if I can get a useful ML model working. 
 Next up is shifting this to a more appealing UI and getting the architecture more modular. See the following tasks for details:
 
 ### Priority Fixes
@@ -40,5 +40,5 @@ Next up is shifting this to a more appealing UI and getting the architecture mor
 - Experiment with recommender ML model
 - Experiment with training ML model for generalizability to solve cold start problem
 - Enable followee list filtering through e.g. profession or keywords
-- Enalbe remote and scheduling control, e.g. with IFTTT integration
+- Enable remote and scheduling control, e.g. with IFTTT integration
 - Enable donations for the artists through their provided options in bio link
