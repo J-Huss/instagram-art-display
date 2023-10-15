@@ -54,7 +54,7 @@ class DisplayApp:
             self.window.update_idletasks()
             self.window.deiconify()
 
-        ### integrate into settings function
+        ### TODO: integrate into settings function
         # slideshow & scraping settings
         self.timer_hours = 0
         self.timer_minutes = 0
@@ -87,14 +87,14 @@ class DisplayApp:
     def setup(self):
         print(str(datetime.now())+": function setup started")
         
-        ### add: welcome prompt
-        ### add: showing small text label with progress steps; constantly updating text and then destroying it
+        ### TODO: welcome prompt
+        ### TODO: showing small text label with progress steps; constantly updating text and then destroying it
         
         if os.path.isfile(db.DB_PATH) is True:
             print(str(datetime.now())+": database exists")
         ### else: 
-        ### add: asks for file path; save this to variable and to config json
-        ### add: create new db with #db.init_all_tables()
+        ### TODO: asks for file path; save this to variable and to config json
+        ### TODO: create new db with #db.init_all_tables()
         # currently no else statement needed, since db.setup_connection creates new db, if there's none existing for coll_acc_pk
         
         
@@ -102,13 +102,13 @@ class DisplayApp:
                 print(str(datetime.now())+": function setup finished")
                 return
         # else:
-            ### add: setup functions
+            ### TODO: setup functions
             ### get collector account pk
             ### get followee list
             ### scrape initial media amount
             ### set first setup done to 1
 
-        ### integrate this into setting option
+        ### TODO: integrate this into setting option
         self.ml_pred_enabled = True
 
         if self.ml_pred_enabled is True:
@@ -227,7 +227,7 @@ class DisplayApp:
 
     def init_media_labels(self):
         # needs completely different if/else setups for different media_types, since different type of labels need to be created
-        ### add: currently works for most screens with just hardcoding the resizing; later add: relative amount
+        ### TODO: currently works for most screens with just hardcoding the resizing; later add: relative amount
         if self.curr_media_obj.media_type == 1:
             print(str(datetime.now())+": creating labels for image")
             self.work_img = Image.open(self.work_img_path)
@@ -290,7 +290,7 @@ class DisplayApp:
         self.get_random_media()
 
     def reg_scraping(self):
-        ### add: hard-coded scraping amount for now; later: install loop with media counter limit
+        ### TODO: hard-coded scraping amount for now; later: install loop with media counter limit
         ### OR integrate time stamps of posts and scrape till latest post saved of users
         while True:
             print(str(datetime.now())+": function reg_scraping started")

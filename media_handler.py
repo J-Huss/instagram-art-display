@@ -14,7 +14,7 @@ CL_SESSION_PATH = db.config["cl_session_path"]
 MEDIA_PATH = db.config["media_path"]
 
 # saving settings
-### todo: include this in settings table per user
+### TODO: include this in settings table per user
 media_saving_enabled = True
 saving_dont_show_again_enabled = True
 saving_videos_enabled = True # not integrated anywhere yet
@@ -28,14 +28,14 @@ else:
 cl.dump_settings(CL_SESSION_PATH)
 
 db.ACTIVE_COLL_ACC_PK = db.config["active_coll_acc_pk"]
-### add: exception handling when ACTIVE_COLL_ACC_PK not yet scraped yet
+### TODO: exception handling when ACTIVE_COLL_ACC_PK not yet scraped yet
 ### db.ACTIVE_COLL_ACC_PK = cl.user_id_from_username(db.ACTIVE_COLL_ACC_STR)
-### add: write to config.json
+### TODO: write to config.json
 
 
-### add: account for event: unfollowing user; delete from user table and all associated media
-### add: conditional: only login, if not logged in from session already
-### add: include scraping of users_urls
+### TODO: account for event: unfollowing user; delete from user table and all associated media
+### TODO: conditional: only login, if not logged in from session already
+### TODO: include scraping of users_urls
 def get_followee_list():
     """currently doesnt account for event: unfollowed user / synch with db"""
     print(str(datetime.now())+": "+"function get_followee_list started")
@@ -175,7 +175,7 @@ def add_relation(post):
         media_pk=int(post_dict["pk"])
         insert(media_pk)
         
-### add: saving media function with conditional for media_saving_enabled
+### TODO: saving media function with conditional for media_saving_enabled
 def insert_media(post):
     """
     - must parse single post as argument, otherwise would need indexing

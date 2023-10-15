@@ -21,7 +21,7 @@ MODEL_PATH = db.config["ml_model_path"]
 ACTIVE_MEDIA_PATH = db.config["media_path"]+db.ACTIVE_COLL_ACC_PK+"/"
 
 
-### can be moved from db.py-file when sqlalchemy fully integrated
+### TODO: can be moved from db.py-file when sqlalchemy fully integrated
 def db_setup():
     CONN_STR="sqlite:///"+db.DB_PATH
     if os.path.isfile(db.DB_PATH):
@@ -40,7 +40,8 @@ def db_setup():
 
 db_setup()
 
-### loading all necessary tables into sqlalchemy here; later move this part to db file
+### loading all necessary tables into sqlalchemy here
+### TODO: later move this part to db file
 accounts_medias = sqa.Table("accounts_medias",metadata_db,autoload=True)
 media = sqa.Table("media",metadata_db,autoload=True)
 ####
@@ -164,7 +165,7 @@ def train_model():
     pks_test = pks_show_test + pks_dont_show_test
 
 
-    ### need to add: if file doesn't exist, load through instagrapi and save to temp dir
+    ### TODO: if file doesn't exist, load through instagrapi and save to temp dir
     for media_pk in pks_show_train:
         file_name=str(media_pk)+".jpg"
         file_path = str(ACTIVE_MEDIA_PATH)+file_name
@@ -176,7 +177,7 @@ def train_model():
         else:
             pass
 
-    ### need to add: if file doesnt exist, load through instagrapi and save to temp dir
+    ### TODO: if file doesnt exist, load through instagrapi and save to temp dir
     for media_pk in pks_dont_show_train:
         file_name=str(media_pk)+".jpg"
         file_path = str(ACTIVE_MEDIA_PATH)+file_name
@@ -224,7 +225,7 @@ def train_model():
 
     model.save(MODEL_PATH)
 
-    ### fix: only deletes the files but not the folder
+    ### FIXME: only deletes the files but not the folder
     shutil.rmtree(temp_dir)
 
     print(str(datetime.now())+": ml training function finished: currently "+str(criteria_1())+" dont_show media and "+str(criteria_2())+" show media remaining")
