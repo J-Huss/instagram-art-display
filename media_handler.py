@@ -1,10 +1,12 @@
-import db
 import instagrapi
 from datetime import datetime 
 import os
 import urllib
 import shutil
 import random
+
+import db
+
 
 CL_USERNAME = db.config["cl_username"]
 CL_PASSWORD = db.config["cl_password"]

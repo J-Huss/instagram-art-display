@@ -6,10 +6,11 @@ import time
 import tempfile
 import shutil
 import tensorflow as tf
-import db
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
 from tensorflow.keras.models import load_model
+
+import db
 
 
 # set fixed training variables
