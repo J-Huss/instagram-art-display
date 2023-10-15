@@ -15,6 +15,7 @@ That's why I looked for ways to bringing it to a bigger screen and created Insta
 ## How to use
 Confirmed to work with Python 3.11.x.
 
+- Install dependencies with `pip install -r requirements.txt`
 - Insert into config.json file:
 - Your file paths
 - Login data for instagram account used for retrieving media (should be a disposable account)
